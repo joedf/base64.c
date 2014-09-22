@@ -19,7 +19,7 @@ unsigned int b64_decode(const unsigned char* in, unsigned int in_len, unsigned i
 //Base64 char table - used internally for encoding
 unsigned char b64_chr[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-//Base64 char table functions - used internally for decoding
+//Base64 char table function - used internally for decoding
 unsigned int b64_int(unsigned int ch) {
 
 	// ASCII to base64_int
