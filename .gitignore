@@ -1,3 +1,7 @@
+*.exe
+*.lnk
+*.url
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
