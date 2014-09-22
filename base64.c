@@ -1,5 +1,3 @@
-#include <stdlib.h>
-
 /*
 	base64.c - by Joe DF (joedf@ahkscript.org)
 	Released under the MIT License
