@@ -21,13 +21,14 @@
 
 #define NELEMS(x)  (sizeof(x) / sizeof(x[0]))
 
+#define STATUS(x)  ((x>0)?"[PASS]":"[FAIL]")
+
 int test_b64_encode();
 int test_b64_decode();
 int test_b64_encodef();
 int test_b64_decodef();
 int hexputs(const int* data, int len);
 int compare(int *a, int *b, int l);
-char *status(int boolean);
 
 int main() {
 	
@@ -41,7 +42,7 @@ int main() {
 	puts("\nTesting b64_decode() ...\n");
 	test_b64_decode();
 	puts("\nTesting test_b64_encodef() ...\n");
-	printf("%s\n",status(test_b64_encodef()));
+	printf("%s\n",STATUS(test_b64_encodef()));
 	puts("\n[END]");
 
 	return 0;
@@ -69,9 +70,9 @@ int test_b64_encode() {
 	out_size_b = b64_encode(test_b,size_b,out_b);
 	out_size_c = b64_encode(test_c,size_c,out_c);
 
-	printf("%s\t%s\n",status(strcmp(out_a,STRING_A)==0),out_a);
-	printf("%s\t%s\n",status(strcmp(out_b,STRING_B)==0),out_b);
-	printf("%s\t%s\n",status(strcmp(out_c,STRING_C)==0),out_c);
+	printf("%s\t%s\n",STATUS(strcmp(out_a,STRING_A)==0),out_a);
+	printf("%s\t%s\n",STATUS(strcmp(out_b,STRING_B)==0),out_b);
+	printf("%s\t%s\n",STATUS(strcmp(out_c,STRING_C)==0),out_c);
 	
 	free(out_a);
 	free(out_b);
@@ -111,9 +112,9 @@ int test_b64_decode() {
 
 	//getchar();
 	
-	printf("%s\t",status(compare(r_a,out_a,NELEMS(r_a)))); hexputs(out_a,out_size_a);
-	printf("%s\t",status(compare(r_b,out_b,NELEMS(r_b)))); hexputs(out_b,out_size_b);
-	printf("%s\t",status(compare(r_c,out_c,NELEMS(r_c)))); hexputs(out_c,out_size_c);
+	printf("%s\t",STATUS(compare(r_a,out_a,NELEMS(r_a)))); hexputs(out_a,out_size_a);
+	printf("%s\t",STATUS(compare(r_b,out_b,NELEMS(r_b)))); hexputs(out_b,out_size_b);
+	printf("%s\t",STATUS(compare(r_c,out_c,NELEMS(r_c)))); hexputs(out_c,out_size_c);
 	
 	//printf("addr_a = %p\n",out_a);
 	//printf("addr_b = %p\n",out_b);
@@ -179,10 +180,4 @@ int compare(int *a, int *b, int l) {
 			return 0;
 	}
 	return 1;
-}
-
-char *status(int boolean) {
-	if (boolean)
-		return "[PASS]";
-	return "[FAIL]";
 }
