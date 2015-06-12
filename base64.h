@@ -2,7 +2,7 @@
 	base64.c - by Joe DF (joedf@ahkscript.org)
 	Released under the MIT License
 	
-	Revision: 2015-06-12 00:02:32
+	Revision: 2015-06-12 01:26:51
 	
 	Thank you for inspiration:
 	http://www.codeproject.com/Tips/813146/Fast-base-functions-for-encode-decode
@@ -37,3 +37,8 @@ unsigned int b64_decode(const unsigned char* in, unsigned int in_len, unsigned i
 // Input : filenames
 // returns size of output
 unsigned int b64_encodef(char *InFile, char *OutFile);
+
+// file-version b64_decode
+// Input : filenames
+// returns size of output
+unsigned int b64_decodef(char *InFile, char *OutFile);

@@ -21,14 +21,21 @@
 
 #define NELEMS(x)  (sizeof(x) / sizeof(x[0]))
 
-#define STATUS(x)  ((x>0)?"[PASS]":"[FAIL]")
+//#define STATUS(x)  ((x>0)?"[PASS]":"[FAIL]")
+#define STATUS(x)  score(x)
+#define PERCENT(a,b)  ((float)((float)a/(float)b)*100)
 
 int test_b64_encode();
 int test_b64_decode();
 int test_b64_encodef();
 int test_b64_decodef();
 int hexputs(const int* data, int len);
+int hexprint(const int* data, int len);
 int compare(int *a, int *b, int l);
+char *score(int x);
+
+int testScore = 0;
+int testTotal = 0;
 
 int main() {
 	
@@ -45,7 +52,7 @@ int main() {
 	printf("%s\n",STATUS(test_b64_encodef()));
 	puts("\nTesting test_b64_decodef() ...\n");
 	printf("%s\n",STATUS(test_b64_decodef()));
-	puts("\n[END]");
+	printf("\n[END] Test score: %g%% (%d/%d)\n",PERCENT(testScore,testTotal),testScore,testTotal);
 
 	return 0;
 }
@@ -146,7 +153,7 @@ int test_b64_encodef() {
 	fclose(pFile);
 	
 	j = b64_encodef("B64_TEST01A.tmp","B64_TEST01B.tmp");
-	//remove("B64_TEST01A.tmp");
+	remove("B64_TEST01A.tmp");
 	
 	if (!j)
 		return 0;
@@ -158,7 +165,7 @@ int test_b64_encodef() {
 	char *out = malloc(j+1);
 	fgets(out,j+1,pFile);
 	fclose(pFile);
-	//remove("B64_TEST01B.tmp");
+	remove("B64_TEST01B.tmp");
 	printf("Comparing \"%s\" to \"%s\" : ",STRING_B,out);
 	if (strcmp(STRING_B,out)==0)
 		return 1;
@@ -179,7 +186,7 @@ int test_b64_decodef() {
 	fclose(pFile);
 	
 	j = b64_decodef("B64_TEST02A.tmp","B64_TEST02B.tmp");
-	//remove("B64_TEST02A.tmp");
+	remove("B64_TEST02A.tmp");
 	
 	if (!j)
 		return 0;
@@ -188,26 +195,36 @@ int test_b64_decodef() {
 	if (pFile==NULL)
 		return 0;
 	
-	char *out = malloc(j+1);
-	fgets(out,j+1,pFile);
+	int c, l=0, out[j+1];
+	while(c!=EOF) {
+		c=fgetc(pFile);
+		if (c==EOF)
+		break;
+		out[l++] = c;
+	}
 	fclose(pFile);
-	//remove("B64_TEST02B.tmp");
-	printf("Comparing \"%s\" with : ",HEXSTR_B); hexputs((int*)out,j);
-
+	remove("B64_TEST02B.tmp");
+	printf("Comparing \"%s\" to \"",HEXSTR_B); hexprint(out,j); printf("\" : ");
 	int r_b[] = HEXNUM_B;
-
-	if (compare((int*)HEXSTR_B,(int*)out,NELEMS(r_b)))
+	if (compare(r_b,out,j))
 		return 1;
 	
 	return 0;
 }
 
 int hexputs(const int* data, int len) {
+	hexprint(data,len);
+	printf("\n");
+	return 0;
+}
+
+int hexprint(const int* data, int len) {
 	int i;
 	for (i=0;i<len;i++) {
-		printf("0x%X ",data[i]);
+		printf("0x%X",data[i]);
+		if (i<len-1)
+			printf(" ");
 	}
-	printf("\n");
 	return 0;
 }
 
@@ -218,4 +235,10 @@ int compare(int *a, int *b, int l) {
 			return 0;
 	}
 	return 1;
+}
+
+char *score(int x) {
+	testScore+=(!!x)*1;
+	testTotal+=1;
+	return ((x>0)?"[PASS]":"[FAIL]");
 }
