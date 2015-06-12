@@ -4,6 +4,7 @@ compile.bat
 *.exe
 *.lnk
 *.url
+*.tmp
 
 # Windows image file caches
 Thumbs.db
