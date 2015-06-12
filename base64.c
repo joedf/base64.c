@@ -144,6 +144,7 @@ unsigned int b64_encodef(char *InFile, char *OutFile) {
 		else
 			fputc('=',pOutFile);
 		fputc('=',pOutFile);
+		i+=4;
 	}
 	
 	fclose(pInFile);
@@ -151,8 +152,39 @@ unsigned int b64_encodef(char *InFile, char *OutFile) {
 	
 	return i;
 }
-/*
+
 unsigned int b64_decodef(char *InFile, char *OutFile) {
+
+	FILE *pInFile = fopen(InFile,"rb");
+	FILE *pOutFile = fopen(OutFile,"wb");
+	if ( (pInFile==NULL) || (pOutFile==NULL) )
+	return 0;
+
+	unsigned int c=0, j=0, k=0, s[4];
 	
+	while(c!=EOF) {
+		c=fgetc(pInFile);
+		if (c==EOF)
+		break;
+		s[j++]=b64_int(c);
+		if (j==4) {
+			fputc((s[0]<<2)+((s[1]&0x30)>>4),pOutFile);
+			if (s[2]!=64) {
+				fputc(((s[1]&0x0F)<<4)+((s[2]&0x3C)>>2),pOutFile);
+				if ((s[3]!=64)) {
+					fputc(((s[2]&0x03)<<6)+(s[3]),pOutFile); k+=3;
+				} else {
+					k+=2;
+				}
+			} else {
+				k+=1;
+			}
+			j=0;
+		}
+	}
+
+	fclose(pInFile);
+	fclose(pOutFile);
+	
+	return k;
 }
-*/

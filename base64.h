@@ -2,7 +2,7 @@
 	base64.c - by Joe DF (joedf@ahkscript.org)
 	Released under the MIT License
 	
-	Revision: 18:30 2014-09-22
+	Revision: 2015-06-12 00:02:32
 	
 	Thank you for inspiration:
 	http://www.codeproject.com/Tips/813146/Fast-base-functions-for-encode-decode

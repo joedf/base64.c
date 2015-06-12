@@ -43,6 +43,8 @@ int main() {
 	test_b64_decode();
 	puts("\nTesting test_b64_encodef() ...\n");
 	printf("%s\n",STATUS(test_b64_encodef()));
+	puts("\nTesting test_b64_decodef() ...\n");
+	printf("%s\n",STATUS(test_b64_decodef()));
 	puts("\n[END]");
 
 	return 0;
@@ -135,7 +137,7 @@ int test_b64_encodef() {
 		return 0;
 	
 	int i, j=0;
-	unsigned int test_a[] = HEXNUM_A;
+	unsigned int test_a[] = HEXNUM_B;
 	unsigned int size_a = NELEMS(test_a);
 	
 	for (i=0;i<size_a;i++) {
@@ -144,7 +146,7 @@ int test_b64_encodef() {
 	fclose(pFile);
 	
 	j = b64_encodef("B64_TEST01A.tmp","B64_TEST01B.tmp");
-	remove("B64_TEST01A.tmp");
+	//remove("B64_TEST01A.tmp");
 	
 	if (!j)
 		return 0;
@@ -156,9 +158,45 @@ int test_b64_encodef() {
 	char *out = malloc(j+1);
 	fgets(out,j+1,pFile);
 	fclose(pFile);
-	remove("B64_TEST01B.tmp");
-	printf("Comparing \"%s\" to \"%s\" : ",STRING_A,out);
-	if (strcmp(STRING_A,out)==0)
+	//remove("B64_TEST01B.tmp");
+	printf("Comparing \"%s\" to \"%s\" : ",STRING_B,out);
+	if (strcmp(STRING_B,out)==0)
+		return 1;
+	
+	return 0;
+}
+
+int test_b64_decodef() {
+	
+	FILE *pFile;
+	pFile = fopen("B64_TEST02A.tmp","wb");
+	if (pFile==NULL)
+		return 0;
+	
+	int j=0;
+	
+	fputs(STRING_B,pFile);
+	fclose(pFile);
+	
+	j = b64_decodef("B64_TEST02A.tmp","B64_TEST02B.tmp");
+	//remove("B64_TEST02A.tmp");
+	
+	if (!j)
+		return 0;
+	
+	pFile = fopen("B64_TEST02B.tmp","rb");
+	if (pFile==NULL)
+		return 0;
+	
+	char *out = malloc(j+1);
+	fgets(out,j+1,pFile);
+	fclose(pFile);
+	//remove("B64_TEST02B.tmp");
+	printf("Comparing \"%s\" with : ",HEXSTR_B); hexputs((int*)out,j);
+
+	int r_b[] = HEXNUM_B;
+
+	if (compare((int*)HEXSTR_B,(int*)out,NELEMS(r_b)))
 		return 1;
 	
 	return 0;
