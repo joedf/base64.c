@@ -60,7 +60,7 @@ unsigned int b64_encode(const unsigned int* in, unsigned int in_len, unsigned ch
 	for (i=0;i<in_len;i++) {
 		s[j++]=*(in+i);
 		if (j==3) {
-			out[k+0] = b64_chr[ s[0]>>2 ];
+			out[k+0] = b64_chr[ (s[0]&255)>>2 ];
 			out[k+1] = b64_chr[ ((s[0]&0x03)<<4)+((s[1]&0xF0)>>4) ];
 			out[k+2] = b64_chr[ ((s[1]&0x0F)<<2)+((s[2]&0xC0)>>6) ];
 			out[k+3] = b64_chr[ s[2]&0x3F ];
@@ -71,7 +71,7 @@ unsigned int b64_encode(const unsigned int* in, unsigned int in_len, unsigned ch
 	if (j) {
 		if (j==1)
 			s[1] = 0;
-		out[k+0] = b64_chr[ s[0]>>2 ];
+		out[k+0] = b64_chr[ (s[0]&255)>>2 ];
 		out[k+1] = b64_chr[ ((s[0]&0x03)<<4)+((s[1]&0xF0)>>4) ];
 		if (j==2)
 			out[k+2] = b64_chr[ ((s[1]&0x0F)<<2) ];
@@ -93,7 +93,7 @@ unsigned int b64_decode(const unsigned char* in, unsigned int in_len, unsigned i
 	for (i=0;i<in_len;i++) {
 		s[j++]=b64_int(*(in+i));
 		if (j==4) {
-			out[k+0] = (s[0]<<2)+((s[1]&0x30)>>4);
+			out[k+0] = ((s[0]&255)<<2)+((s[1]&0x30)>>4);
 			if (s[2]!=64) {
 				out[k+1] = ((s[1]&0x0F)<<4)+((s[2]&0x3C)>>2);
 				if ((s[3]!=64)) {
@@ -126,7 +126,7 @@ unsigned int b64_encodef(char *InFile, char *OutFile) {
 		break;
 		s[j++]=c;
 		if (j==3) {
-			fputc(b64_chr[ s[0]>>2 ],pOutFile);
+			fputc(b64_chr[ (s[0]&255)>>2 ],pOutFile);
 			fputc(b64_chr[ ((s[0]&0x03)<<4)+((s[1]&0xF0)>>4) ],pOutFile);
 			fputc(b64_chr[ ((s[1]&0x0F)<<2)+((s[2]&0xC0)>>6) ],pOutFile);
 			fputc(b64_chr[ s[2]&0x3F ],pOutFile);
@@ -137,7 +137,7 @@ unsigned int b64_encodef(char *InFile, char *OutFile) {
 	if (j) {
 		if (j==1)
 			s[1] = 0;
-		fputc(b64_chr[ s[0]>>2 ],pOutFile);
+		fputc(b64_chr[ (s[0]&255)>>2 ],pOutFile);
 		fputc(b64_chr[ ((s[0]&0x03)<<4)+((s[1]&0xF0)>>4) ],pOutFile);
 		if (j==2)
 			fputc(b64_chr[ ((s[1]&0x0F)<<2) ],pOutFile);
@@ -168,7 +168,7 @@ unsigned int b64_decodef(char *InFile, char *OutFile) {
 		break;
 		s[j++]=b64_int(c);
 		if (j==4) {
-			fputc((s[0]<<2)+((s[1]&0x30)>>4),pOutFile);
+			fputc(((s[0]&255)<<2)+((s[1]&0x30)>>4),pOutFile);
 			if (s[2]!=64) {
 				fputc(((s[1]&0x0F)<<4)+((s[2]&0x3C)>>2),pOutFile);
 				if ((s[3]!=64)) {
