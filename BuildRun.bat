@@ -2,6 +2,7 @@
 mkdir bin 2>NUL
 cls
 echo compiling...
+mkdir bin 2>nul
 gcc test.c base64.c -o bin\test.exe
 gcc b64f.c base64.c -s -o bin\b64f.exe
 echo running...
