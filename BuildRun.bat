@@ -3,7 +3,7 @@ mkdir bin 2>NUL
 cls
 echo compiling...
 gcc test.c base64.c -o bin\test.exe
-gcc b64f.c base64.c -o bin\b64f.exe
+gcc b64f.c base64.c -s -o bin\b64f.exe
 echo running...
 bin\test.exe
 echo.
