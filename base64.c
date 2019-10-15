@@ -112,13 +112,18 @@ unsigned int b64_decode(const unsigned char* in, unsigned int in_len, unsigned i
 }
 
 unsigned int b64_encodef(char *InFile, char *OutFile) {
-	
-	FILE *pInFile = fopen(InFile,"rb");
-	FILE *pOutFile = fopen(OutFile,"wb");
-	if ( (pInFile==NULL) || (pOutFile==NULL) )
-	return 0;
-	
-	unsigned int i=0, j=0, c=0, s[3];
+	  FILE *pInFile = fopen(InFile,"rb");
+    FILE *pOutFile = fopen(OutFile,"wb");
+    unsigned int i=0;
+    unsigned int j=0;
+    unsigned int c=0;
+    unsigned int s[4];
+    if ((pInFile==NULL) || (pOutFile==NULL) )
+    {
+        if (pInFile!=NULL){fclose(pInFile);}
+        if (pOutFile!=NULL){fclose(pOutFile);}
+        return 0;
+    }
 	
 	while(c!=EOF) {
 		c=fgetc(pInFile);
@@ -155,12 +160,18 @@ unsigned int b64_encodef(char *InFile, char *OutFile) {
 
 unsigned int b64_decodef(char *InFile, char *OutFile) {
 
-	FILE *pInFile = fopen(InFile,"rb");
-	FILE *pOutFile = fopen(OutFile,"wb");
-	if ( (pInFile==NULL) || (pOutFile==NULL) )
-	return 0;
-
-	unsigned int c=0, j=0, k=0, s[4];
+	  FILE *pInFile = fopen(InFile,"rb");
+    FILE *pOutFile = fopen(OutFile,"wb");
+    unsigned int c=0;
+    unsigned int j=0;
+    unsigned int k=0;
+    unsigned int s[4];
+    if ((pInFile==NULL) || (pOutFile==NULL) )
+    {
+        if (pInFile!=NULL){fclose(pInFile);}
+        if (pOutFile!=NULL){fclose(pOutFile);}
+        return 0;
+    }
 	
 	while(c!=EOF) {
 		c=fgetc(pInFile);
