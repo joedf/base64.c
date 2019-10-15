@@ -14,7 +14,7 @@ echo
 echo Decoding test image from "picture.b64.txt" to "picture.b64.png"...
 bin/b64f d picture.b64.txt picture.b64.png
 echo Done.
-echo See files manually if the programmed works correctly.
+echo Check the files manually to see if the program works correctly.
 
 
 
