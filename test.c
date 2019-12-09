@@ -17,6 +17,9 @@
 #define HEXSTR_A "0xF5 0x3A 0xC9"
 #define HEXSTR_B "0xF5 0x3A 0xC9 0x51"
 #define HEXSTR_C "0xF5 0x3A 0xC9 0x51 0xF0"
+
+#define TEXT_STR "1234567"
+#define TEXT_B64 "MTIzNDU2Nw=="
 ///////////////////////////////////////////////////////////////
 
 #define NELEMS(x)  (sizeof(x) / sizeof(x[0]))
@@ -29,6 +32,9 @@ int test_b64_encode();
 int test_b64_decode();
 int test_b64_encodef();
 int test_b64_decodef();
+int test_b64_text_encode();
+int test_b64_text_decode();
+
 int hexputs(const int* data, int len);
 int hexprint(const int* data, int len);
 int compare(int *a, int *b, int l);
@@ -52,6 +58,10 @@ int main() {
 	printf("%s\n",STATUS(test_b64_encodef()));
 	puts("\nTesting test_b64_decodef() ...\n");
 	printf("%s\n",STATUS(test_b64_decodef()));
+	puts("\nTesting test_b64_text_encode() ...\n");
+	test_b64_text_encode();
+	puts("\nTesting test_b64_text_decode() ...\n");
+	test_b64_text_decode();
 	printf("\n[END] Test score: %g%% (%d/%d)\n",PERCENT(testScore,testTotal),testScore,testTotal);
 
 	return 0;
@@ -210,6 +220,28 @@ int test_b64_decodef() {
 		return 1;
 	
 	return 0;
+}
+
+int test_b64_text_encode() {
+	char *test_str = TEXT_STR;
+	int length = strlen(test_str) + 1;
+	unsigned char *out_a = malloc( b64e_size(length) );
+	int out_size_a = b64_encode((unsigned int*)test_str,length,out_a);
+	
+	printf("%s\t%s\n",STATUS(strcmp(out_a,TEXT_B64)==0),out_a);
+	
+	free(out_a);
+}
+
+int test_b64_text_decode() {
+	char *test_str = TEXT_B64;
+	int length = strlen(test_str) + 1;
+	unsigned char *out_a = malloc( b64d_size(length) );
+	int out_size_a = b64_decode(test_str,length,(unsigned int*)out_a);
+	
+	printf("%s\t%s\n",STATUS(strcmp(out_a,TEXT_STR)==0),out_a);
+	
+	free(out_a);
 }
 
 int hexputs(const int* data, int len) {

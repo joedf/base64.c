@@ -8,6 +8,7 @@ gcc b64f.c base64.c -s -o bin\b64f.exe
 echo running...
 bin\test.exe
 echo.
+echo ----------------[ Testing file - encoding/decoding ]----------------
 echo Encoding test image "picture.png" to "picture.b64.txt"...
 bin\b64f.exe e picture.png picture.b64.txt
 echo.
