@@ -64,6 +64,7 @@ int main() {
 	test_b64_text_encode();
 	puts("\nTesting test_b64_text_decode() ...\n");
 	test_b64_text_decode();
+	puts("------------------------------------");
 	printf("\n[END] Test score: %g%% (%d/%d)\n",PERCENT(testScore,testTotal),testScore,testTotal);
 
 	return 0;
