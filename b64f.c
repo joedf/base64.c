@@ -61,7 +61,7 @@ int main(int argc,char** argv) {
 				}
 			
 			bcoded = b64_decode(argv[2],blen,txt);
-			txt[blen] = '\0';
+			txt[bcoded] = '\0';
 			printf("Decoded text from base64: %s", txt);
 			free(txt);
 			break;

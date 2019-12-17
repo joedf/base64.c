@@ -18,8 +18,8 @@
 #define HEXSTR_B "0xF5 0x3A 0xC9 0x51"
 #define HEXSTR_C "0xF5 0x3A 0xC9 0x51 0xF0"
 
-#define TEXT_STR "1234567"
-#define TEXT_B64 "MTIzNDU2Nw=="
+#define TEXT_STR "test1234567"
+#define TEXT_B64 "dGVzdDEyMzQ1Njc="
 ///////////////////////////////////////////////////////////////
 
 #define NELEMS(x)  (sizeof(x) / sizeof(x[0]))
@@ -35,9 +35,10 @@ int test_b64_decodef();
 int test_b64_text_encode();
 int test_b64_text_decode();
 
-int hexputs(const int* data, int len);
-int hexprint(const int* data, int len);
-int compare(int *a, int *b, int l);
+int hexputs(const char* data, int len);
+int hexprint(const char* data, int len);
+int compare(char *a, char *b, int l);
+void deepCompare(int pass, char *a, char *b, int len);
 char *score(int x);
 
 int testScore = 0;
@@ -45,11 +46,12 @@ int testTotal = 0;
 
 int main() {
 	
-	puts("\nbase64.c [Test]");
+	puts("\nbase64.c [Test Data]");
 	puts("------------------------------------");
 	printf("%s           : %s\n",HEXSTR_A,STRING_A);
 	printf("%s      : %s\n",HEXSTR_B,STRING_B);
 	printf("%s : %s\n",HEXSTR_C,STRING_C);
+	printf("%s              : %s\n",TEXT_STR,TEXT_B64);
 	puts("\nTesting b64_encode() ...\n");
 	test_b64_encode();
 	puts("\nTesting b64_decode() ...\n");
@@ -69,9 +71,9 @@ int main() {
 
 int test_b64_encode() {
 	
-	int test_a[] = HEXNUM_A;
-	int test_b[] = HEXNUM_B;
-	int test_c[] = HEXNUM_C;
+	char test_a[] = HEXNUM_A;
+	char test_b[] = HEXNUM_B;
+	char test_c[] = HEXNUM_C;
 
 	int size_a = NELEMS(test_a);
 	int size_b = NELEMS(test_b);
@@ -81,17 +83,17 @@ int test_b64_encode() {
 	int out_size_b = b64e_size(size_b) + 1;
 	int out_size_c = b64e_size(size_c) + 1;
 
-	unsigned char *out_a = malloc(out_size_a);
-	unsigned char *out_b = malloc(out_size_b);
-	unsigned char *out_c = malloc(out_size_c);
+	unsigned char *out_a = malloc( (sizeof(char) * out_size_a) );
+	unsigned char *out_b = malloc( (sizeof(char) * out_size_b) );
+	unsigned char *out_c = malloc( (sizeof(char) * out_size_c) );
 	
 	out_size_a = b64_encode(test_a,size_a,out_a);
 	out_size_b = b64_encode(test_b,size_b,out_b);
 	out_size_c = b64_encode(test_c,size_c,out_c);
 
-	printf("%s\t%s\n",STATUS(strcmp(out_a,STRING_A)==0),out_a);
-	printf("%s\t%s\n",STATUS(strcmp(out_b,STRING_B)==0),out_b);
-	printf("%s\t%s\n",STATUS(strcmp(out_c,STRING_C)==0),out_c);
+	printf("\t%s\t%s\n",STATUS(strcmp(out_a,STRING_A)==0),out_a);
+	printf("\t%s\t%s\n",STATUS(strcmp(out_b,STRING_B)==0),out_b);
+	printf("\t%s\t%s\n",STATUS(strcmp(out_c,STRING_C)==0),out_c);
 	
 	free(out_a);
 	free(out_b);
@@ -113,31 +115,22 @@ int test_b64_decode() {
 	int out_size_a = b64d_size(len_a);
 	int out_size_b = b64d_size(len_b);
 	int out_size_c = b64d_size(len_c);
-	
-	//printf("%i,%i,%i\n",out_size_a,out_size_b,out_size_c);
-	//wierd ~100 bytes memory problem?
 
-	unsigned int *out_a = malloc(out_size_a+100);
-	unsigned int *out_b = malloc(out_size_b+100);
-	unsigned int *out_c = malloc(out_size_c+100);
+	unsigned char *out_a = malloc( (sizeof(char) * out_size_a) +1);
+	unsigned char *out_b = malloc( (sizeof(char) * out_size_b) +1);
+	unsigned char *out_c = malloc( (sizeof(char) * out_size_c) +1);
 	
 	out_size_a = b64_decode(test_a,len_a,out_a);
 	out_size_b = b64_decode(test_b,len_b,out_b);
 	out_size_c = b64_decode(test_c,len_c,out_c);
 	
-	int r_a[] = HEXNUM_A;
-	int r_b[] = HEXNUM_B;
-	int r_c[] = HEXNUM_C;
-
-	//getchar();
+	char r_a[] = HEXNUM_A;
+	char r_b[] = HEXNUM_B;
+	char r_c[] = HEXNUM_C;
 	
-	printf("%s\t",STATUS(compare(r_a,out_a,NELEMS(r_a)))); hexputs(out_a,out_size_a);
-	printf("%s\t",STATUS(compare(r_b,out_b,NELEMS(r_b)))); hexputs(out_b,out_size_b);
-	printf("%s\t",STATUS(compare(r_c,out_c,NELEMS(r_c)))); hexputs(out_c,out_size_c);
-	
-	//printf("addr_a = %p\n",out_a);
-	//printf("addr_b = %p\n",out_b);
-	//printf("addr_c = %p\n",out_c);
+	printf("\t%s\t",STATUS(compare(r_a,out_a,NELEMS(r_a)))); hexputs(out_a,out_size_a);
+	printf("\t%s\t",STATUS(compare(r_b,out_b,NELEMS(r_b)))); hexputs(out_b,out_size_b);
+	printf("\t%s\t",STATUS(compare(r_c,out_c,NELEMS(r_c)))); hexputs(out_c,out_size_c);
 	
 	free(out_a);
 	free(out_b);
@@ -176,7 +169,7 @@ int test_b64_encodef() {
 	fgets(out,j+1,pFile);
 	fclose(pFile);
 	remove("B64_TEST01B.tmp");
-	printf("Comparing \"%s\" to \"%s\" : ",STRING_B,out);
+	printf("\tComparing \"%s\" to \"%s\" : ",STRING_B,out);
 	if (strcmp(STRING_B,out)==0)
 		return 1;
 	
@@ -205,7 +198,7 @@ int test_b64_decodef() {
 	if (pFile==NULL)
 		return 0;
 	
-	int c, l=0, out[j+1];
+	char c, l=0, out[j+1];
 	while(c!=EOF) {
 		c=fgetc(pFile);
 		if (c==EOF)
@@ -214,8 +207,8 @@ int test_b64_decodef() {
 	}
 	fclose(pFile);
 	remove("B64_TEST02B.tmp");
-	printf("Comparing \"%s\" to \"",HEXSTR_B); hexprint(out,j); printf("\" : ");
-	int r_b[] = HEXNUM_B;
+	printf("\tComparing \"%s\" to \"",HEXSTR_B); hexprint(out,j); printf("\" : ");
+	char r_b[] = HEXNUM_B;
 	if (compare(r_b,out,j))
 		return 1;
 	
@@ -224,11 +217,14 @@ int test_b64_decodef() {
 
 int test_b64_text_encode() {
 	char *test_str = TEXT_STR;
-	int length = strlen(test_str) + 1;
-	unsigned char *out_a = malloc( b64e_size(length) );
-	int out_size_a = b64_encode((unsigned int*)test_str,length,out_a);
+	int length = strlen(test_str);
+	unsigned char *out_a = (char *)malloc(1 + (sizeof(char) * b64e_size(length)));
+	int out_size_a = b64_encode(test_str,length,out_a);
 	
-	printf("%s\t%s\n",STATUS(strcmp(out_a,TEXT_B64)==0),out_a);
+	int test_passed = (strcmp(out_a,TEXT_B64)==0);
+	printf("\t%s\t%s\n",STATUS(test_passed),out_a);
+
+	deepCompare(test_passed,out_a,TEXT_B64,out_size_a);
 	
 	free(out_a);
 }
@@ -236,37 +232,52 @@ int test_b64_text_encode() {
 int test_b64_text_decode() {
 	char *test_str = TEXT_B64;
 	int length = strlen(test_str) + 1;
-	unsigned char *out_a = malloc( b64d_size(length) );
-	int out_size_a = b64_decode(test_str,length,(unsigned int*)out_a);
+	unsigned char *out_a = malloc( b64d_size(length)+1 );
+	int out_size_a = b64_decode(test_str,length,out_a);
+	out_a[out_size_a] = '\0';
 	
-	printf("%s\t%s\n",STATUS(strcmp(out_a,TEXT_STR)==0),out_a);
+	int test_passed = (strcmp(out_a,TEXT_STR)==0);
+	printf("\t%s\t%s\n",STATUS(test_passed),out_a);
+
+	deepCompare(test_passed,out_a,TEXT_STR,out_size_a);
 	
 	free(out_a);
 }
 
-int hexputs(const int* data, int len) {
+int hexputs(const char* data, int len) {
 	hexprint(data,len);
 	printf("\n");
 	return 0;
 }
 
-int hexprint(const int* data, int len) {
+int hexprint(const char* data, int len) {
 	int i;
 	for (i=0;i<len;i++) {
-		printf("0x%X",data[i]);
+		printf("0x%X",data[i]&255);
 		if (i<len-1)
 			printf(" ");
 	}
 	return 0;
 }
 
-int compare(int *a, int *b, int l) {
+int compare(char *a, char *b, int l) {
 	int i;
 	for (i=0;i<l;i++) {
 		if (a[i]!=b[i])
 			return 0;
 	}
 	return 1;
+}
+
+void deepCompare(int pass, char *a, char *b, int len){
+	if (!pass) {
+		for(int j=0;j<len;j++){
+			printf("\t\'%c\' == \'%c\'",a[j],b[j]);
+			if (a[j] != b[j])
+				printf(" <- Error.");
+			printf("\n");
+		}
+	}
 }
 
 char *score(int x) {
