@@ -171,10 +171,14 @@ int test_b64_encodef() {
 	fclose(pFile);
 	remove("B64_TEST01B.tmp");
 	printf("\tComparing \"%s\" to \"%s\" : ",STRING_B,out);
-	if (strcmp(STRING_B,out)==0)
-		return 1;
 	
-	return 0;
+	int retVal = 0;
+	if (strcmp(STRING_B,out)==0)
+		retVal = 1;
+
+	free(out);
+	
+	return retVal;
 }
 
 int test_b64_decodef() {
