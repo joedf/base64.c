@@ -34,6 +34,8 @@ int test_b64_encodef();
 int test_b64_decodef();
 int test_b64_text_encode();
 int test_b64_text_decode();
+int test_b64e_size();
+int test_b64d_size();
 
 int hexputs(const char* data, int len);
 int hexprint(const char* data, int len);
@@ -64,6 +66,10 @@ int main() {
 	test_b64_text_encode();
 	puts("\nTesting test_b64_text_decode() ...\n");
 	test_b64_text_decode();
+	puts("\nTesting b64e_size() ...\n");
+	test_b64e_size();
+	puts("\nTesting b64d_size() ...\n");
+	test_b64d_size();
 	puts("------------------------------------");
 	printf("\n[END] Test score: %g%% (%d/%d)\n",PERCENT(testScore,testTotal),testScore,testTotal);
 
@@ -232,6 +238,8 @@ int test_b64_text_encode() {
 	deepCompare(test_passed,out_a,TEXT_B64,out_size_a);
 	
 	free(out_a);
+
+	return 0;
 }
 
 int test_b64_text_decode() {
@@ -247,6 +255,38 @@ int test_b64_text_decode() {
 	deepCompare(test_passed,out_a,TEXT_STR,out_size_a);
 	
 	free(out_a);
+
+	return 0;
+}
+
+int test_b64e_size() {
+	// get ideal size with null byte
+	unsigned int idealsize = b64e_size(sizeof(TEXT_STR)) + 1;
+
+	// allocate memory with space for null byte
+	unsigned char *result = malloc( (sizeof(char) * idealsize) );
+
+	// encode it and get the actual size
+	unsigned int actualsize = b64_encode((unsigned char *)TEXT_STR, sizeof(TEXT_STR), &result[0]);
+
+	printf("\t%s\tideal size = %d\tactual size = %d\n", STATUS(idealsize == actualsize), idealsize, actualsize);
+
+	return 0;
+}
+
+int test_b64d_size() {
+	// get ideal size for decoded
+	unsigned int idealsize = b64d_size(sizeof(TEXT_B64));
+
+	// allocate memory of ideal size
+	unsigned char *result = malloc( (sizeof(char) * idealsize) );
+
+	// decode it and get the actual size
+	unsigned int actualsize = b64_decode((unsigned char *)TEXT_B64, sizeof(TEXT_B64), &result[0]);
+
+	printf("\t%s\tideal size = %d\tactual size = %d\n", STATUS(idealsize == actualsize), idealsize, actualsize);
+
+	return 0;
 }
 
 int hexputs(const char* data, int len) {
