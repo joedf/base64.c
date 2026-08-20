@@ -18,8 +18,10 @@
 #define HEXSTR_B "0xF5 0x3A 0xC9 0x51"
 #define HEXSTR_C "0xF5 0x3A 0xC9 0x51 0xF0"
 
-#define TEXT_STR "test1234567"
-#define TEXT_B64 "dGVzdDEyMzQ1Njc="
+// #define TEXT_STR "test1234567"
+// #define TEXT_B64 "dGVzdDEyMzQ1Njc="
+#define TEXT_STR "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."
+#define TEXT_B64 "TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdCwgc2VkIGRvIGVpdXNtb2QgdGVtcG9yIGluY2lkaWR1bnQgdXQgbGFib3JlIGV0IGRvbG9yZSBtYWduYSBhbGlxdWEuLi4="
 ///////////////////////////////////////////////////////////////
 
 #define NELEMS(x)  (sizeof(x) / sizeof(x[0]))
