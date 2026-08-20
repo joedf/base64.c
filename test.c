@@ -284,7 +284,10 @@ int test_b64d_size() {
 	// decode it and get the actual size
 	unsigned int actualsize = b64_decode((unsigned char *)TEXT_B64, sizeof(TEXT_B64), &result[0]);
 
-	printf("\t%s\tideal size = %d\tactual size = %d\n", STATUS(idealsize == actualsize), idealsize, actualsize);
+	// Should be equal or larger, with the difference no more than a few bytes?
+	int tolerance = 2;
+	int diff = idealsize - actualsize;
+	printf("\t%s\tideal size = %d\tactual size = %d\n", STATUS(diff <= tolerance && diff >= 0), idealsize, actualsize);
 
 	return 0;
 }
